@@ -1,0 +1,11 @@
+import { auth } from "@/app/api/auth/[...nextauth]/route";
+
+export default auth((req) => {
+  const isAuth = !!req.auth;
+  const isDashboard = req.nextUrl.pathname.startsWith("/dashboard") || req.nextUrl.pathname.startsWith("/settings");
+  if (isDashboard && !isAuth) {
+    return Response.redirect(new URL("/login", req.url));
+  }
+});
+
+export const config = { matcher: ["/dashboard/:path*", "/settings/:path*"] };
